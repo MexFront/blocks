@@ -26,11 +26,6 @@ export default {
     };
   },
 
-  updated() {
-    console.log(this.$refs);
-    console.log(document.querySelectorAll('_highlighted'));
-  },
-
   methods: {
     changeStyle() {
       if (this.type === 'normal') {
