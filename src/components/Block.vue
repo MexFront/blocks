@@ -35,7 +35,13 @@ export default {
     },
 
     close() {
-      this.$emit('close', { id: this.id, type: this.type });
+      if (this.type === 'normal') {
+        if (window.confirm('Are you sure?')) {
+          this.$emit('close', { id: this.id, type: this.type });
+        }
+      } else {
+        this.$emit('close', { id: this.id, type: this.type });
+      }
     },
   },
 };
