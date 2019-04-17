@@ -1,5 +1,7 @@
 <template lang="pug">
-  .block(:class='type') I am {{ type }} block # {{ id }}
+  .block(
+    :class='style'
+    @dblclick='changeStyle') I am {{ type }} block # {{ id }}
     .block__close(@click='close')
 </template>
 
@@ -15,13 +17,23 @@ export default {
     },
   },
 
-  computed: {
-    blockStyle() {
-      return null;
-    },
+  data() {
+    return {
+      style: '',
+    };
   },
 
   methods: {
+    changeStyle() {
+      if (this.type === 'normal') {
+        if (this.style === '' || this.style === '_red') {
+          this.style = '_green';
+        } else if (this.style === '_green') {
+          this.style = '_red';
+        }
+      }
+    },
+
     close() {
       this.$emit('close', { id: this.id, type: this.type });
     },
@@ -40,6 +52,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    user-select: none;
 
     &__close {
       color: #777;
@@ -55,13 +68,12 @@ export default {
         content: '✖';
       }
     }
+  }
+  ._green {
+    border: 2px dotted green;
+  }
 
-    ._green {
-      border: 2px dotted green;
-    }
-
-    ._red {
-      border: 2px dotted red;
-    }
+  ._red {
+    border: 2px dotted red;
   }
 </style>
