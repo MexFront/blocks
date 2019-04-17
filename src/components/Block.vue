@@ -1,7 +1,6 @@
 <template lang="pug">
   .block(
     :class='[style, { _highlighted: highlighted }]'
-    ref='blockitem'
     @click.once='highlight'
     @dblclick='changeStyle') I am {{ type }} block # {{ id }}
     .block__close(@click='close')
