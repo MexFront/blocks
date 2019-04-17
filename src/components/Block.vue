@@ -1,6 +1,8 @@
 <template lang="pug">
   .block(
-    :class='style'
+    :class='[style, { _highlighted: highlighted }]'
+    ref='blockitem'
+    @click.once='highlight'
     @dblclick='changeStyle') I am {{ type }} block # {{ id }}
     .block__close(@click='close')
 </template>
@@ -19,8 +21,14 @@ export default {
 
   data() {
     return {
+      highlighted: false,
       style: '',
     };
+  },
+
+  updated() {
+    console.log(this.$refs);
+    console.log(document.querySelectorAll('_highlighted'));
   },
 
   methods: {
@@ -36,12 +44,18 @@ export default {
 
     close() {
       if (this.type === 'normal') {
+        // eslint-disable-next-line
         if (window.confirm('Are you sure?')) {
           this.$emit('close', { id: this.id, type: this.type });
         }
       } else {
         this.$emit('close', { id: this.id, type: this.type });
       }
+    },
+
+    highlight() {
+      this.highlighted = true;
+      this.$emit('highlight');
     },
   },
 };
@@ -81,5 +95,9 @@ export default {
 
   ._red {
     border: 2px dotted red;
+  }
+
+  ._highlighted {
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.75);
   }
 </style>
