@@ -15,7 +15,7 @@
           :key='`simple-${block.id}`'
           type='simple'
           @close='closeBlock'
-          @highlight='highlighted += 1')
+          @highlight='highlightToggle')
       .blocks__normal
         block(
           v-for='block in normalBlocks'
@@ -25,7 +25,7 @@
           @styled='setStyleNum'
           @switched='setSwitchedNum'
           @close='closeBlock'
-          @highlight='highlighted += 1')
+          @highlight='highlightToggle')
     info.blocks__info(
       :green='green'
       :highlighted='highlighted'
@@ -86,8 +86,9 @@ export default {
       }
     },
 
-    highlight(num) {
-      this.highlighted = num;
+    highlightToggle(status) {
+      if (status === 'true') this.highlighted += 1;
+      else this.highlighted -= 1;
     },
 
     setStyleNum(val) {

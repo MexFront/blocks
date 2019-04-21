@@ -1,7 +1,7 @@
 <template lang="pug">
   .block(
     :class='[style, { _highlighted: highlighted }]'
-    @click.once='highlight'
+    @click='highlight'
     @dblclick='changeStyle') I am {{ type }} block # {{ id }}
     .block__close(@click='close')
 </template>
@@ -53,8 +53,13 @@ export default {
     },
 
     highlight() {
-      this.highlighted = true;
-      this.$emit('highlight');
+      if (this.$el.classList.contains('_highlighted')) {
+        this.highlighted = false;
+        this.$emit('highlight', 'false');
+      } else {
+        this.highlighted = true;
+        this.$emit('highlight', 'true');
+      }
     },
   },
 };
