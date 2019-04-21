@@ -22,14 +22,12 @@
           :id='block.id'
           :key='`normal-${block.id}`'
           type='normal'
-          @styled='setStyleNum'
-          @switched='setSwitchedNum'
           @close='closeBlock'
           @highlight='highlightToggle')
     info.blocks__info(
-      :green='green'
+      :green='greenHl'
       :highlighted='highlighted'
-      :red='red'
+      :red='redHl'
       :total='blocksTotal')
 </template>
 
@@ -52,9 +50,9 @@ export default {
   data() {
     return {
       blocksTotal: 0,
-      green: 0,
+      greenHl: 0,
       highlighted: 0,
-      red: 0,
+      redHl: 0,
       simpleBlocks: [],
       normalBlocks: [],
     };
@@ -69,6 +67,7 @@ export default {
     addNormalBlock() {
       this.normalBlocks.push({ id: this.normalBlocks.length + 1 });
       this.blocksTotal += 1;
+      this.green += 1;
     },
 
     closeBlock(block) {
@@ -76,6 +75,7 @@ export default {
         const blockIndex = this.simpleBlocks.findIndex(index => (index.id === block.id));
         this.simpleBlocks.splice(blockIndex, 1);
         this.blocksTotal -= 1;
+        if (block.el.contains('_highlighted')) this.highlighted -= 1;
       }
       if (block.type === 'normal') {
         if (block.el.contains('_green')) this.green -= 1;
@@ -83,27 +83,26 @@ export default {
         const blockIndex = this.normalBlocks.findIndex(index => (index.id === block.id));
         this.normalBlocks.splice(blockIndex, 1);
         this.blocksTotal -= 1;
+        if (block.el.contains('_green') && block.el.contains('_highlighted')) {
+          this.greenHl -= 1;
+          this.highlighted -= 1;
+        }
+        if (block.el.contains('_red') && block.el.contains('_highlighted')) {
+          this.redHl -= 1;
+          this.highlighted -= 1;
+        }
       }
     },
 
-    highlightToggle(status) {
-      if (status === 'true') this.highlighted += 1;
-      else this.highlighted -= 1;
-    },
-
-    setStyleNum(val) {
-      if (val === '_green') this.green += 1;
-      if (val === '_red') this.red += 1;
-    },
-
-    setSwitchedNum(val) {
-      if (val === '_green') {
-        this.green += 1;
-        this.red -= 1;
-      }
-      if (val === '_red') {
-        this.green -= 1;
-        this.red += 1;
+    highlightToggle(params) {
+      if (params.status === 'true') {
+        this.highlighted += 1;
+        if (params.el.contains('_green')) this.greenHl += 1;
+        if (params.el.contains('_red')) this.redHl += 1;
+      } else {
+        this.highlighted -= 1;
+        if (params.el.contains('_green')) this.greenHl -= 1;
+        if (params.el.contains('_red')) this.redHl -= 1;
       }
     },
   },

@@ -1,6 +1,6 @@
 <template lang="pug">
   .block(
-    :class='[style, { _highlighted: highlighted }]'
+    :class='[isStyleNormal, { _highlighted: highlighted }]'
     @click='highlight'
     @dblclick='changeStyle') I am {{ type }} block # {{ id }}
     .block__close(@click='close')
@@ -21,22 +21,21 @@ export default {
   data() {
     return {
       highlighted: false,
-      style: '',
+      style: '_green',
     };
+  },
+
+  computed: {
+    isStyleNormal() { return this.type === 'normal' ? this.style : ''; },
   },
 
   methods: {
     changeStyle() {
       if (this.type === 'normal') {
-        if (this.style === '') {
+        if (this.style === '_red') {
           this.style = '_green';
-          this.$emit('styled', '_green');
-        } else if (this.style === '_red') {
-          this.style = '_green';
-          this.$emit('switched', '_green');
         } else if (this.style === '_green') {
           this.style = '_red';
-          this.$emit('switched', '_red');
         }
       }
     },
@@ -48,17 +47,17 @@ export default {
           this.$emit('close', { id: this.id, type: this.type, el: this.$el.classList });
         }
       } else {
-        this.$emit('close', { id: this.id, type: this.type });
+        this.$emit('close', { id: this.id, type: this.type, el: this.$el.classList });
       }
     },
 
     highlight() {
       if (this.$el.classList.contains('_highlighted')) {
         this.highlighted = false;
-        this.$emit('highlight', 'false');
+        this.$emit('highlight', { status: 'false', el: this.$el.classList });
       } else {
         this.highlighted = true;
-        this.$emit('highlight', 'true');
+        this.$emit('highlight', { status: 'true', el: this.$el.classList });
       }
     },
   },

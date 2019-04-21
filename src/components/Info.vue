@@ -2,8 +2,8 @@
   .info
     .info__total Всего блоков на странице: {{ total }}
     .info__highlited Всего выделенных блоков: {{ highlighted }}
-    .info__green Количество зеленых: {{ green }}
-    .info__red Количество красных: {{ red}}
+    .info__green Количество выделенных зеленых: {{ green }}
+    .info__red Количество выделенных красных: {{ red}}
 </template>
 
 <script>
