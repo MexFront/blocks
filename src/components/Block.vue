@@ -28,10 +28,15 @@ export default {
   methods: {
     changeStyle() {
       if (this.type === 'normal') {
-        if (this.style === '' || this.style === '_red') {
+        if (this.style === '') {
           this.style = '_green';
+          this.$emit('styled', '_green');
+        } else if (this.style === '_red') {
+          this.style = '_green';
+          this.$emit('switched', '_green');
         } else if (this.style === '_green') {
           this.style = '_red';
+          this.$emit('switched', '_red');
         }
       }
     },
@@ -40,7 +45,7 @@ export default {
       if (this.type === 'normal') {
         // eslint-disable-next-line
         if (window.confirm('Are you sure?')) {
-          this.$emit('close', { id: this.id, type: this.type });
+          this.$emit('close', { id: this.id, type: this.type, el: this.$el.classList });
         }
       } else {
         this.$emit('close', { id: this.id, type: this.type });

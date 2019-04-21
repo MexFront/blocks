@@ -22,11 +22,15 @@
           :id='block.id'
           :key='`normal-${block.id}`'
           type='normal'
+          @styled='setStyleNum'
+          @switched='setSwitchedNum'
           @close='closeBlock'
           @highlight='highlighted += 1')
     info.blocks__info(
-      :total='blocksTotal'
-      :highlighted='highlighted')
+      :green='green'
+      :highlighted='highlighted'
+      :red='red'
+      :total='blocksTotal')
 </template>
 
 <script>
@@ -48,7 +52,9 @@ export default {
   data() {
     return {
       blocksTotal: 0,
+      green: 0,
       highlighted: 0,
+      red: 0,
       simpleBlocks: [],
       normalBlocks: [],
     };
@@ -56,12 +62,12 @@ export default {
 
   methods: {
     addSimpleBlock() {
-      this.simpleBlocks.push({ id: this.simpleBlocks.length });
+      this.simpleBlocks.push({ id: this.simpleBlocks.length + 1 });
       this.blocksTotal += 1;
     },
 
     addNormalBlock() {
-      this.normalBlocks.push({ id: this.normalBlocks.length });
+      this.normalBlocks.push({ id: this.normalBlocks.length + 1 });
       this.blocksTotal += 1;
     },
 
@@ -72,6 +78,8 @@ export default {
         this.blocksTotal -= 1;
       }
       if (block.type === 'normal') {
+        if (block.el.contains('_green')) this.green -= 1;
+        if (block.el.contains('_red')) this.red -= 1;
         const blockIndex = this.normalBlocks.findIndex(index => (index.id === block.id));
         this.normalBlocks.splice(blockIndex, 1);
         this.blocksTotal -= 1;
@@ -80,6 +88,22 @@ export default {
 
     highlight(num) {
       this.highlighted = num;
+    },
+
+    setStyleNum(val) {
+      if (val === '_green') this.green += 1;
+      if (val === '_red') this.red += 1;
+    },
+
+    setSwitchedNum(val) {
+      if (val === '_green') {
+        this.green += 1;
+        this.red -= 1;
+      }
+      if (val === '_red') {
+        this.green -= 1;
+        this.red += 1;
+      }
     },
   },
 };
@@ -92,7 +116,7 @@ export default {
 
     &__buttons {
       display: flex;
-      justify-content: space-evenly;
+      justify-content: center;
       padding-bottom: 50px;
     }
 
@@ -102,7 +126,8 @@ export default {
       background: cornflowerblue;
       border: none;
       border-radius: 6px;
-      width: 150px;
+      margin: 0 10px;
+      width: 220px;
     }
 
     &__container {
