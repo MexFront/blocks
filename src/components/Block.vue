@@ -1,8 +1,7 @@
 <template lang="pug">
   .block(
     :class='[isStyleNormal, { _highlighted: highlighted }]'
-    @click='highlight'
-    @dblclick='changeStyle') I am {{ type }} block # {{ id }}
+    @click='clicked') I am {{ type }} block # {{ id }}
     .block__close(@click='close')
 </template>
 
@@ -20,8 +19,12 @@ export default {
 
   data() {
     return {
+      clicks: 0,
+      delay: 300,
       highlighted: false,
+      result: [],
       style: '_green',
+      timer: null,
     };
   },
 
@@ -30,6 +33,22 @@ export default {
   },
 
   methods: {
+    clicked(event) {
+      this.clicks += 1;
+      if (this.clicks === 1) {
+        this.timer = setTimeout(() => {
+          this.result.push(event.type);
+          this.clicks = 0;
+          this.highlight();
+        }, this.delay);
+      } else {
+        clearTimeout(this.timer);
+        this.result.push('dblclick');
+        this.clicks = 0;
+        this.changeStyle();
+      }
+    },
+
     changeStyle() {
       if (this.type === 'normal') {
         if (this.style === '_red') {
@@ -37,6 +56,7 @@ export default {
         } else if (this.style === '_green') {
           this.style = '_red';
         }
+        this.$emit('styleChanged', { style: this.style, highlighted: this.highlighted });
       }
     },
 
@@ -52,13 +72,17 @@ export default {
     },
 
     highlight() {
-      if (this.$el.classList.contains('_highlighted')) {
-        this.highlighted = false;
-        this.$emit('highlight', { status: 'false', el: this.$el.classList });
-      } else {
-        this.highlighted = true;
-        this.$emit('highlight', { status: 'true', el: this.$el.classList });
-      }
+      setTimeout(() => {
+        if (this.$el.classList.contains('_highlighted')) {
+          if (this.type === 'normal') this.$emit('highlight', { status: 'false', style: this.style });
+          else this.$emit('highlight', { status: 'false' });
+          this.highlighted = false;
+        } else {
+          if (this.type === 'normal') this.$emit('highlight', { status: 'true', style: this.style });
+          else this.$emit('highlight', { status: 'true' });
+          this.highlighted = true;
+        }
+      }, 300);
     },
   },
 };

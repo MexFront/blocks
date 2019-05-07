@@ -23,7 +23,8 @@
           :key='`normal-${block.id}`'
           type='normal'
           @close='closeBlock'
-          @highlight='highlightToggle')
+          @highlight='highlightToggle'
+          @styleChanged='styleChanged')
     info.blocks__info(
       :green='greenHl'
       :highlighted='highlighted'
@@ -97,12 +98,23 @@ export default {
     highlightToggle(params) {
       if (params.status === 'true') {
         this.highlighted += 1;
-        if (params.el.contains('_green')) this.greenHl += 1;
-        if (params.el.contains('_red')) this.redHl += 1;
+        if (params.style === '_green') this.greenHl += 1;
+        if (params.style === '_red') this.redHl += 1;
       } else {
         this.highlighted -= 1;
-        if (params.el.contains('_green')) this.greenHl -= 1;
-        if (params.el.contains('_red')) this.redHl -= 1;
+        if (params.style === '_green') this.greenHl -= 1;
+        if (params.style === '_red') this.redHl -= 1;
+      }
+    },
+
+    styleChanged(params) {
+      if (params.style === '_green' && params.highlighted) {
+        this.greenHl += 1;
+        this.redHl -= 1;
+      }
+      if (params.style === '_red' && params.highlighted) {
+        this.redHl += 1;
+        this.greenHl -= 1;
       }
     },
   },
