@@ -1,4 +1,3 @@
-const path = require('path')
 const webpack = require('webpack') // eslint-disable-line
 
 module.exports = {
@@ -13,4 +12,5 @@ module.exports = {
       },
     },
   },
-}
+  publicPath: '/blocks/',
+};
