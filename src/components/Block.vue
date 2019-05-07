@@ -72,17 +72,15 @@ export default {
     },
 
     highlight() {
-      setTimeout(() => {
-        if (this.$el.classList.contains('_highlighted')) {
-          if (this.type === 'normal') this.$emit('highlight', { status: 'false', style: this.style });
-          else this.$emit('highlight', { status: 'false' });
-          this.highlighted = false;
-        } else {
-          if (this.type === 'normal') this.$emit('highlight', { status: 'true', style: this.style });
-          else this.$emit('highlight', { status: 'true' });
-          this.highlighted = true;
-        }
-      }, 300);
+      if (this.$el.classList.contains('_highlighted')) {
+        if (this.type === 'normal') this.$emit('highlight', { status: 'false', style: this.style });
+        else this.$emit('highlight', { status: 'false' });
+        this.highlighted = false;
+      } else {
+        if (this.type === 'normal') this.$emit('highlight', { status: 'true', style: this.style });
+        else this.$emit('highlight', { status: 'true' });
+        this.highlighted = true;
+      }
     },
   },
 };
